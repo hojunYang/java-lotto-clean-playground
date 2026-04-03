@@ -8,7 +8,6 @@ import util.SequenceGenerator;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class StatisticTest {
     @DisplayName("로또 결과 채점 테스트")
