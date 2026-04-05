@@ -3,18 +3,25 @@ package controller;
 import domain.LottoService;
 import domain.LottoTicket;
 import domain.Statistic;
-import util.RandomNumberGenerator;
+import domain.WinningResultDto;
 import view.InputView;
 import view.OutputView;
 
 import java.util.List;
 
 public class Controller {
-    InputView inputView = new InputView();
-    OutputView outputView = new OutputView();
-    LottoService lottoService = new LottoService(new RandomNumberGenerator());
-    Statistic statistic = new Statistic();
+    private final InputView inputView;
+    private final OutputView outputView;
+    private final LottoService lottoService;
+    private final Statistic statistic;
 
+    public Controller(InputView inputView, OutputView outputView,
+                      LottoService lottoService, Statistic statistic) {
+        this.inputView = inputView;
+        this.outputView = outputView;
+        this.lottoService = lottoService;
+        this.statistic = statistic;
+    }
 
     public void run(){
         int money = inputView.getMoney();
@@ -25,7 +32,7 @@ public class Controller {
 
         List<Integer> winningNumbers = inputView.getWinningNumbers();
 
-        List<Integer> winningResult = statistic.getWinningResult(lottoTickets, winningNumbers);
+        WinningResultDto winningResult = statistic.getWinningResult(lottoTickets, winningNumbers);
         double revenue = statistic.getRevenue(money, winningResult);
 
         outputView.printResult(winningResult, revenue);

@@ -1,17 +1,16 @@
 package domain;
 
-import util.NumberGenerator;
+import util.LottoNumberGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class LottoService {
     public static final int TICKET_PRICE = 1000;
-    public static final int LOTTO_SIZE = 6;
-    NumberGenerator numberGenerator;
+    LottoNumberGenerator lottoNumberGenerator;
 
-    public LottoService(NumberGenerator numberGenerator) {
-        this.numberGenerator = numberGenerator;
+    public LottoService(LottoNumberGenerator lottoNumberGenerator) {
+        this.lottoNumberGenerator = lottoNumberGenerator;
     }
 
     public List<LottoTicket> buyTickets(int money) {
@@ -20,7 +19,7 @@ public class LottoService {
 
         List<LottoTicket> tickets = new ArrayList<>();
 
-        for(int i=0;i<ticketCount;i++){
+        for(int i = 0; i < ticketCount; i++){
             tickets.add(generateTicket());
         }
 
@@ -28,17 +27,7 @@ public class LottoService {
     }
 
     private LottoTicket generateTicket() {
-
-        List<Integer> ticketNumbers = new ArrayList<>();
-
-        while (ticketNumbers.size() < LOTTO_SIZE) {
-            int randomNumber = numberGenerator.generate();
-            if(!ticketNumbers.contains(randomNumber)) {
-                ticketNumbers.add(randomNumber);
-            }
-        }
-
-        return new LottoTicket(ticketNumbers);
+        return new LottoTicket(lottoNumberGenerator.generateNumbers());
     }
 
     private void validateMoney(int money) {

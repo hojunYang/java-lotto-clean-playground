@@ -1,5 +1,6 @@
 package domain;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -7,12 +8,12 @@ public class LottoTicket {
     List<Integer> lottoNumbers;
 
     public LottoTicket (List<Integer> lottoNumbers) {
-        this.lottoNumbers = lottoNumbers;
+        this.lottoNumbers = new ArrayList<>(lottoNumbers);
         Collections.sort(this.lottoNumbers);
     }
 
-    public List<Integer> getTicketNumbers() {
-        return this.lottoNumbers;
+    public String toDisplayString() {
+        return lottoNumbers.toString();
     }
 
     public int getMatchedNumbers(List<Integer> winningNumbers) {
