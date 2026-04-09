@@ -1,7 +1,5 @@
 package domain;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -21,10 +19,16 @@ public class LottoTicket {
         return lottoNumbers.toString();
     }
 
-    public int getMatchedNumbers(LottoTicket winningTicket) {
+    public WinningRank getWinningRank(WinningNumbers winningNumbers) {
+        int matchCount = countMatchNumbers(winningNumbers);
+        boolean bonusMatched = lottoNumbers.contains(winningNumbers.getBonusNumber());
+        return WinningRank.of(matchCount, bonusMatched);
+    }
+
+    private int countMatchNumbers(WinningNumbers winningNumbers) {
         int count = 0;
-        for (LottoNumber lottoNumber : winningTicket.lottoNumbers) {
-            if (lottoNumbers.contains(lottoNumber)) {
+        for (LottoNumber winningNumber : winningNumbers.getLottoNumbers()) {
+            if (lottoNumbers.contains(winningNumber)) {
                 count++;
             }
         }

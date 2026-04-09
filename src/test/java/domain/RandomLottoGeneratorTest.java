@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 class RandomLottoGeneratorTest {
     @DisplayName("로또 생성 번호가 1에서 45 사이인지 테스트")
     @Test
-    void testLottoNumebrsBetween1And45() {
+    void testLottoNumebersBetween1And45() {
         LottoGenerator generator = new RandomLottoGenerator();
 
         List<LottoNumber> numbers = generator.generateNumbers();

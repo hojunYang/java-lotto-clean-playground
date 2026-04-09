@@ -1,12 +1,11 @@
 package domain;
 
-import java.util.Arrays;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
-import static java.util.Arrays.stream;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class StatisticTest {
@@ -21,17 +20,20 @@ class StatisticTest {
         Statistic statistic = new Statistic();
 
         // when
-        List<LottoTicket> tickets = lottoService.buyTickets(2000);
-        WinningResultDto result = statistic.getWinningResult(
+        List<LottoTicket> tickets = lottoService.buyTickets(2000, List.of());
+        Map<WinningRank, Integer> result = statistic.getWinningResult(
                 tickets,
-                new LottoTicket(toLottoNumbers(List.of(1, 5, 3, 11, 12, 13)))
+                new WinningNumbers(
+                        toLottoNumbers(List.of(1, 5, 3, 11, 12, 13)),
+                        new LottoNumber(14)
+                )
         );
 
         // then
-        assertThat(result.getThreeMatchCount()).isEqualTo(2);
-        assertThat(result.getFourMatchCount()).isEqualTo(0);
-        assertThat(result.getFiveMatchCount()).isEqualTo(0);
-        assertThat(result.getSixMatchCount()).isEqualTo(0);
+        assertThat(result.get(WinningRank.THREE)).isEqualTo(2);
+        assertThat(result.get(WinningRank.FOUR)).isEqualTo(0);
+        assertThat(result.get(WinningRank.FIVE)).isEqualTo(0);
+        assertThat(result.get(WinningRank.SIX)).isEqualTo(0);
     }
 
     @DisplayName("수익률 계산 테스트")
@@ -39,17 +41,16 @@ class StatisticTest {
     void testRevenue() {
         // given
         Statistic statistic = new Statistic();
-        WinningResultDto result = new WinningResultDto();
-        result.addMatchCount(3);
-        result.addMatchCount(3);
-        result.addMatchCount(4);
+        Map<WinningRank, Integer> result = initializeResult();
+        result.put(WinningRank.THREE, 2);
+        result.put(WinningRank.FOUR, 1);
 
         // when
         double revenue = statistic.getRevenue(3000, result);
 
         // then
-        double expected = (WinningPrizeDto.THREE_MATCH_PRIZE * 2
-                + WinningPrizeDto.FOUR_MATCH_PRIZE) / 3000.0;
+        double expected = (WinningRank.THREE.getPrize() * 2
+                + WinningRank.FOUR.getPrize()) / 3000.0;
 
         assertThat(revenue).isEqualTo(expected);
     }
@@ -60,15 +61,29 @@ class StatisticTest {
         // given
         Statistic statistic = new Statistic();
         List<LottoTicket> tickets = getLottoTickets();
-        LottoTicket winningTicket = new LottoTicket(toLottoNumbers(List.of(1, 2, 3, 4, 5, 6)));
+        WinningNumbers winningNumbers = new WinningNumbers(
+                toLottoNumbers(List.of(1, 2, 3, 4, 5, 6)),
+                new LottoNumber(7)
+        );
 
         // when
-        WinningResultDto result = statistic.getWinningResult(tickets, winningTicket);
+        Map<WinningRank, Integer> result = statistic.getWinningResult(tickets, winningNumbers);
         // then
-        assertThat(result.getThreeMatchCount()).isEqualTo(1);
-        assertThat(result.getFourMatchCount()).isEqualTo(1);
-        assertThat(result.getFiveMatchCount()).isEqualTo(1);
-        assertThat(result.getSixMatchCount()).isEqualTo(1);
+        assertThat(result.get(WinningRank.THREE)).isEqualTo(1);
+        assertThat(result.get(WinningRank.FOUR)).isEqualTo(1);
+        assertThat(result.get(WinningRank.FIVE)).isEqualTo(1);
+        assertThat(result.get(WinningRank.SIX)).isEqualTo(1);
+        assertThat(result.get(WinningRank.FIVE_BONUS)).isEqualTo(0);
+    }
+
+    private static Map<WinningRank, Integer> initializeResult() {
+        Map<WinningRank, Integer> result = new EnumMap<>(WinningRank.class);
+
+        for (WinningRank rank : WinningRank.values()) {
+            result.put(rank, 0);
+        }
+
+        return result;
     }
 
     private static List<LottoTicket> getLottoTickets() {
