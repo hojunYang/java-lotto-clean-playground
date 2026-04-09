@@ -1,5 +1,6 @@
 package controller;
 
+import domain.LottoNumber;
 import domain.LottoService;
 import domain.LottoTicket;
 import domain.Statistic;
@@ -32,7 +33,13 @@ public class Controller {
 
         List<Integer> winningNumbers = inputView.getWinningNumbers();
 
-        WinningResultDto winningResult = statistic.getWinningResult(lottoTickets, winningNumbers);
+        LottoTicket winningTicket = new LottoTicket(
+                winningNumbers.stream()
+                        .map(LottoNumber::new)
+                        .toList()
+        );
+
+        WinningResultDto winningResult = statistic.getWinningResult(lottoTickets, winningTicket);
         double revenue = statistic.getRevenue(money, winningResult);
 
         outputView.printResult(winningResult, revenue);

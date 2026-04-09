@@ -1,12 +1,12 @@
 package domain;
 
+import java.util.Arrays;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import util.LottoNumberGenerator;
-import util.FixedLottoNumberGenerator;
 
 import java.util.List;
 
+import static java.util.Arrays.stream;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class StatisticTest {
@@ -16,15 +16,15 @@ class StatisticTest {
         // given
         List<Integer> sequence = List.of(1, 5, 3, 2, 6, 7);
 
-        LottoNumberGenerator lottoNumberGenerator = new FixedLottoNumberGenerator(sequence);
-        LottoService lottoService = new LottoService(lottoNumberGenerator);
+        LottoGenerator lottoGenerator = new FixedLottoGenerator(sequence);
+        LottoService lottoService = new LottoService(lottoGenerator);
         Statistic statistic = new Statistic();
 
         // when
         List<LottoTicket> tickets = lottoService.buyTickets(2000);
         WinningResultDto result = statistic.getWinningResult(
                 tickets,
-                List.of(1, 5, 3, 11, 12, 13)
+                new LottoTicket(toLottoNumbers(List.of(1, 5, 3, 11, 12, 13)))
         );
 
         // then
@@ -60,10 +60,10 @@ class StatisticTest {
         // given
         Statistic statistic = new Statistic();
         List<LottoTicket> tickets = getLottoTickets();
-        List<Integer> winningNumbers = List.of(1, 2, 3, 4, 5, 6);
+        LottoTicket winningTicket = new LottoTicket(toLottoNumbers(List.of(1, 2, 3, 4, 5, 6)));
 
         // when
-        WinningResultDto result = statistic.getWinningResult(tickets, winningNumbers);
+        WinningResultDto result = statistic.getWinningResult(tickets, winningTicket);
         // then
         assertThat(result.getThreeMatchCount()).isEqualTo(1);
         assertThat(result.getFourMatchCount()).isEqualTo(1);
@@ -72,10 +72,10 @@ class StatisticTest {
     }
 
     private static List<LottoTicket> getLottoTickets() {
-        LottoTicket threeMatchTicket = new LottoTicket(List.of(1, 2, 3, 40, 41, 42));
-        LottoTicket fourMatchTicket = new LottoTicket(List.of(1, 2, 3, 4, 41, 42));
-        LottoTicket fiveMatchTicket = new LottoTicket(List.of(1, 2, 3, 4, 5, 42));
-        LottoTicket sixMatchTicket = new LottoTicket(List.of(1, 2, 3, 4, 5, 6));
+        LottoTicket threeMatchTicket = new LottoTicket(toLottoNumbers(List.of(1, 2, 3, 40, 41, 42)));
+        LottoTicket fourMatchTicket = new LottoTicket(toLottoNumbers(List.of(1, 2, 3, 4, 41, 42)));
+        LottoTicket fiveMatchTicket = new LottoTicket(toLottoNumbers(List.of(1, 2, 3, 4, 5, 42)));
+        LottoTicket sixMatchTicket = new LottoTicket(toLottoNumbers(List.of(1, 2, 3, 4, 5, 6)));
 
         return List.of(
                 threeMatchTicket,
@@ -84,4 +84,11 @@ class StatisticTest {
                 sixMatchTicket
         );
     }
+
+    private static List<LottoNumber> toLottoNumbers(List<Integer> numbers) {
+        return numbers.stream()
+                .map(LottoNumber::new)
+                .toList();
+    }
+
 }

@@ -3,7 +3,7 @@ package domain;
 import java.util.List;
 
 public class Statistic {
-    public WinningResultDto getWinningResult(List<LottoTicket> lottoTickets, List<Integer> winningNumbers) {
+    public WinningResultDto getWinningResult(List<LottoTicket> lottoTickets, LottoTicket winningNumbers) {
         WinningResultDto result = new WinningResultDto();
         for (LottoTicket lottoTicket : lottoTickets) {
             int matchedCount = lottoTicket.getMatchedNumbers(winningNumbers);

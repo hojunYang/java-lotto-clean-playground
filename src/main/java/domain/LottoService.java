@@ -1,16 +1,14 @@
 package domain;
 
-import util.LottoNumberGenerator;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class LottoService {
     public static final int TICKET_PRICE = 1000;
-    LottoNumberGenerator lottoNumberGenerator;
+    LottoGenerator lottoGenerator;
 
-    public LottoService(LottoNumberGenerator lottoNumberGenerator) {
-        this.lottoNumberGenerator = lottoNumberGenerator;
+    public LottoService(LottoGenerator lottoGenerator) {
+        this.lottoGenerator = lottoGenerator;
     }
 
     public List<LottoTicket> buyTickets(int money) {
@@ -27,7 +25,7 @@ public class LottoService {
     }
 
     private LottoTicket generateTicket() {
-        return new LottoTicket(lottoNumberGenerator.generateNumbers());
+        return new LottoTicket(lottoGenerator.generateNumbers());
     }
 
     private void validateMoney(int money) {
