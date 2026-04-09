@@ -10,13 +10,13 @@ public class LottoTicket {
     public LottoTicket (List<LottoNumber> lottoNumbers) {
         validateSize(lottoNumbers);
         validateDuplicate(lottoNumbers);
-        this.lottoNumbers = lottoNumbers.stream()
-                .sorted(Comparator.comparingInt(LottoNumber::value))
-                .toList();
+        this.lottoNumbers = lottoNumbers;
     }
 
     public String toDisplayString() {
-        return lottoNumbers.toString();
+        return lottoNumbers.stream()
+                .sorted(Comparator.comparingInt(LottoNumber::value))
+                .toString();
     }
 
     public WinningRank getWinningRank(WinningNumbers winningNumbers) {
