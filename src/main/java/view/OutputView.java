@@ -1,10 +1,6 @@
 package view;
 
-import static java.lang.Math.floor;
-import static java.lang.Math.round;
-
 import domain.LottoTicket;
-
 import domain.WinningRank;
 import java.util.List;
 import java.util.Map;

@@ -6,7 +6,6 @@ import domain.LottoTicket;
 import domain.Statistic;
 import domain.WinningNumbers;
 import domain.WinningRank;
-import java.util.ArrayList;
 import java.util.Map;
 import view.InputView;
 import view.OutputView;
@@ -14,7 +13,6 @@ import view.OutputView;
 import java.util.List;
 
 public class Controller {
-    public static final int TICKET_PRICE = 1000;
     private final InputView inputView;
     private final OutputView outputView;
     private final LottoService lottoService;
